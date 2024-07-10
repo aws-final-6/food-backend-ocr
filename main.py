@@ -7,7 +7,7 @@ import shutil
 class MyPaddleOCR:
     def __init__(self, lang: str = "korean", **kwargs):
         self.lang = lang
-        self._ocr = PaddleOCR(lang="korean", use_gpu=True, use_angle_cls = True, use_space_char = True,)
+        self._ocr = PaddleOCR(lang="korean", use_gpu=False, use_angle_cls = True, use_space_char = True,)
         self.img_path = None
         self.ocr_result = {}
 
