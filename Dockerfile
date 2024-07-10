@@ -1,5 +1,5 @@
 # Use the NVIDIA CUDA base image
-FROM nvidia/cuda:11.2.1-cudnn8-runtime-ubuntu20.04
+FROM ubuntu:22.04
 
 # Install necessary dependencies
 RUN apt-get update && apt-get install -y \
@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install PaddlePaddle with GPU support and FastAPI
-RUN pip3 install paddlepaddle-gpu paddleocr fastapi uvicorn
+RUN pip3 install paddlepaddle paddleocr fastapi uvicorn
 
 # Create a directory for the app
 WORKDIR /app
