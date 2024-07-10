@@ -1,0 +1,84 @@
+#name: CI Pipeline
+#
+#on:
+#  push:
+#    branches:
+#      - main
+
+#jobs:
+ # build: 
+  #  runs-on: self-hosted
+
+   # steps:
+    #- uses: actions/checkout@v3
+
+    #- name: Set up Docker Buildx
+     # uses: docker/setup-buildx-action@v2
+      
+    #- name: Login to Harbor
+     # run: echo ${{ secrets.HARBOR_PASSWORD }} | docker login -u ${{ secrets.HARBOR_USERNAME }} --password-stdin 192.168.56.200
+
+    #- name: Build image
+     # run: |
+      #  docker build -t 192.168.56.200/mylittlerecipebook/mlr-dev-be-img-ocr:${{ github.run_number }} -f Dockerfile .
+    
+  #  - name: Push Docker image
+  #    run: |
+   #     docker push 192.168.56.200/mylittlerecipebook/mlr-dev-be-img-ocr:${{ github.run_number }}
+
+  #  - name: Remove Docker image
+ #     run: |
+  #      docker rmi 192.168.56.200/mylittlerecipebook/mlr-dev-be-img-ocr:${{ github.run_number }}
+         
+ #   - name: Clone GitOps Repo
+  #    env:
+   #     GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+ #     run: |
+   #     git clone https://x-access-token:${{ secrets.TOKEN_GITHUB }}@github.com/aws-final-6/GitOps_Repo.git
+        
+#    - name: Install yq without sudo
+#      run: |
+#        wget -qO ~/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+ #       chmod +x ~/yq
+    
+#    - name: Update fe_deployment.yaml with new image
+#      run: |
+#        cd GitOps_Repo
+ #       ~/yq -i '.spec.template.spec.containers[0].image = "192.168.56.200/mylittlerecipebook/mlr-dev-be-img-ocr:${{ github.run_number }}"' fe_deployment.yaml
+      
+#    - name: Configure git email
+#      run: |
+#        cd GitOps_Repo
+#        git config --global user.email "${{ secrets.EMAIL_GITHUB }}"
+        
+#    - name: Configure git username
+ #     run: |
+#        cd GitOps_Repo
+#        git config --global user.name "${{ secrets.USERNAME_GITHUB }}"
+         
+#    - name: Commit and push changes
+ #     env:
+#        GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+#      run: |
+#        tree
+#        cd GitOps_Repo
+#        tree
+#        echo "cd gitops-repo"
+#        git status
+#        git add fe_deployment.yaml
+#        echo "git add fe_deployment.yaml"
+#        git commit -m "Update image to 192.168.56.200/mylittlerecipebook/mlr-dev-be-img-ocr:${{ github.run_number }}"
+#        echo "git commit"
+#        git push https://x-access-token:${{ secrets.TOKEN_GITHUB }}@github.com/aws-final-6/GitOps_Repo.git
+
+ #   - name: action-slack
+ #     uses: 8398a7/action-slack@v3
+ #     with:
+ #       status: ${{ job.status }}
+ #       author_name: Build MLR paddleOCR
+ #       fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+ #       github_token: ${{ secrets.TOKEN_GITHUB }}
+ #     env:
+  #      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+      if: always()
