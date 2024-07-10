@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from paddleocr import PaddleOCR
 import re
+import os
+import shutil
 
 class MyPaddleOCR:
     def __init__(self, lang: str = "korean", **kwargs):
@@ -135,7 +137,11 @@ async def root():
 @app.post('/coupang/')
 async def upload_image(file: UploadFile = File(...)):
     try:
+        folder_path = "coupang"
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
         file_location = f"coupang/{file.filename}"
+
         with open(file_location, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
@@ -151,7 +157,12 @@ async def upload_image(file: UploadFile = File(...)):
 @app.post('/naver/')
 async def upload_image(file: UploadFile = File(...)):
     try:
+        folder_path = "naver"
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+        
         file_location = f"naver/{file.filename}"
+
         with open(file_location, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
