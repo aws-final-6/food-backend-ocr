@@ -19,28 +19,28 @@ phases:
   build:
     commands:
       - echo Building the Docker image...
-      - docker build -t ${ECR_REGISTRY}/mylittlerecipebook/mlr-prd-db-img-ocr:${CODEBUILD_BUILD_NUMBER} -f Dockerfile .
+      - docker build -t ${ECR_REGISTRY}/mylittlerecipebook/mlr-prd-be-img-ocr:${CODEBUILD_BUILD_NUMBER} -f Dockerfile .
       - echo "Docker build completed"
       - docker images
 
   post_build:
     commands:
       - echo Tagging the Docker image...
-      - docker tag ${ECR_REGISTRY}/mylittlerecipebook/mlr-prd-db-img-ocr:${CODEBUILD_BUILD_NUMBER} ${ECR_REGISTRY}/mylittlerecipebook/mlr-prd-db-img-ocr:latest
+      - docker tag ${ECR_REGISTRY}/mylittlerecipebook/mlr-prd-be-img-ocr:${CODEBUILD_BUILD_NUMBER} ${ECR_REGISTRY}/mylittlerecipebook/mlr-prd-be-img-ocr:latest
       - echo "Docker image tagged"
       - echo Pushing the Docker image to Seoul region ECR...
-      - docker push ${ECR_REGISTRY}/mylittlerecipebook/mlr-prd-db-img-ocr:${CODEBUILD_BUILD_NUMBER}
-      - docker push ${ECR_REGISTRY}/mylittlerecipebook/mlr-prd-db-img-ocr:latest
+      - docker push ${ECR_REGISTRY}/mylittlerecipebook/mlr-prd-be-img-ocr:${CODEBUILD_BUILD_NUMBER}
+      - docker push ${ECR_REGISTRY}/mylittlerecipebook/mlr-prd-be-img-ocr:latest
       - echo "Docker push completed"
       - echo Updating be_ocr_deployment.yaml with the new image...
       - cd food-backend-ocr
-      - ~/yq -i '.spec.template.spec.containers[0].image = "${ECR_REGISTRY}/mylittlerecipebook/mlr-prd-db-img-ocr:${CODEBUILD_BUILD_NUMBER}"' be_ocr_deployment.yaml
+      - ~/yq -i '.spec.template.spec.containers[0].image = "${ECR_REGISTRY}/mylittlerecipebook/mlr-prd-be-img-ocr:${CODEBUILD_BUILD_NUMBER}"' be_ocr_deployment.yaml
       - echo Configuring git user...
       - git config --global user.email "${EMAIL_GITHUB}"
       - git config --global user.name "${USERNAME_GITHUB}"
       - echo Committing and pushing changes...
       - git add be_ocr_deployment.yaml
-      - git commit -m "Update image to ${ECR_REGISTRY}/mylittlerecipebook/mlr-prd-db-img-ocr:${CODEBUILD_BUILD_NUMBER}"
+      - git commit -m "Update image to ${ECR_REGISTRY}/mylittlerecipebook/mlr-prd-be-img-ocr:${CODEBUILD_BUILD_NUMBER}"
       - git push https://x-access-token:${TOKEN_GITHUB}@github.com/aws-final-6/food-backend-ocr.git
       - echo Deploying to EKS...
       - aws eks --region us-east-1 update-kubeconfig --name MLR-PRD-EKS-CLS
