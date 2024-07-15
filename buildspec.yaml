@@ -43,7 +43,7 @@ phases:
       - git commit -m "Update image to ${ECR_REGISTRY}/mylittlerecipebook/mlr-prd-be-img-ocr:${CODEBUILD_BUILD_NUMBER}"
       - git push https://x-access-token:${TOKEN_GITHUB}@github.com/aws-final-6/food-backend-ocr.git
       - echo Deploying to EKS...
-      - aws eks --region us-east-1 update-kubeconfig --name MLR-PRD-EKS-CLS
+      - aws eks --region us-east-1 update-kubeconfig --name mlr-prd-eks-cls
       - kubectl create secret docker-registry regcred --docker-server=${ECR_REGISTRY} --docker-username=AWS --docker-password=$(aws ecr get-login-password --region ap-northeast-2) --namespace=default
       - kubectl apply -f be_ocr_deployment.yaml --namespace=default
 
