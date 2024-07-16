@@ -8,9 +8,6 @@ phases:
 
   pre_build:
     commands:
-      - echo Cloning repository...
-      - git clone https://x-access-token:${TOKEN_GITHUB}@github.com/aws-final-6/food-backend-ocr.git
-      - cd food-backend-ocr
       - echo Setting up yq...
       - wget -qO ~/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
       - chmod +x ~/yq
@@ -33,20 +30,6 @@ phases:
       - docker push ${ECR_REGISTRY}/mylittlerecipebook/mlr-prd-be-img-ocr:latest
       - echo "Docker push completed"
       - echo Updating be_ocr_deployment.yaml with the new image...
-      - cd food-backend-ocr
-      - ~/yq -i '.spec.template.spec.containers[0].image = "${ECR_REGISTRY}/mylittlerecipebook/mlr-prd-be-img-ocr:${CODEBUILD_BUILD_NUMBER}"' be_ocr_deployment.yaml
-      - echo Configuring git user...
-      - git config --global user.email "${EMAIL_GITHUB}"
-      - git config --global user.name "${USERNAME_GITHUB}"
-      - echo Committing and pushing changes...
-      - git add be_ocr_deployment.yaml
-      - git commit -m "Update image to ${ECR_REGISTRY}/mylittlerecipebook/mlr-prd-be-img-ocr:${CODEBUILD_BUILD_NUMBER}"
-      - git push https://x-access-token:${TOKEN_GITHUB}@github.com/aws-final-6/food-backend-ocr.git
-      - echo Deploying to EKS...
-      - aws eks --region us-east-1 update-kubeconfig --name mlr-prd-eks-cls
-      - kubectl create secret docker-registry regcred --docker-server=${ECR_REGISTRY} --docker-username=AWS --docker-password=$(aws ecr get-login-password --region ap-northeast-2) --namespace=default
-      - kubectl apply -f be_ocr_deployment.yaml --namespace=default
-
 artifacts:
   files:
     - '**/*'
