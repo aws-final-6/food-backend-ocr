@@ -1,13 +1,17 @@
 # Use the NVIDIA CUDA base image
 FROM ubuntu:22.04
 
-# Install necessary dependencies
-RUN apt-get update && apt-get install -y \
+# Update and upgrade system packages, then install necessary dependencies
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y \
     python3-pip \
     python3 \
     libgl1-mesa-glx \
-    libglib2.0-0 \
-    && rm -rf /var/lib/apt/lists/*
+    libglib2.0-0 && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install PaddlePaddle with GPU support and FastAPI
 RUN pip3 install paddlepaddle paddleocr fastapi uvicorn requests
